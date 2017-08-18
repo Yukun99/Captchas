@@ -1,0 +1,27 @@
+#Config Version 1 by Yukun
+#Placeholders:
+#- %item% for item to click in captcha -- Usable in GUIName.
+#- %player% for player to execute command on -- Usable in Commands.
+CaptchaOptions:
+  ###################
+  # General Options #
+  ###################
+  #Chance for captcha to open. 1000 chance would be a 1/1000 chance for captcha to open.
+  Chance: 1000
+  #Number of wrong answers before player gets punished. Must be 1 or above. (1 disables strike system)
+  Wrong: 3
+  #Whether to reduce wrong answer count when a correct item is clicked. (false disables Clear message)
+  Clear: true
+  #Commands to run when player answers captcha wrongly. These HAVE to be console commands!
+  Commands: #Jail or a similar command is strong encouraged so the player cannot warp out!
+    - 'jail %player%'
+    - 'mute %player%'
+    - 'report %player% autoclick'
+
+  ###############
+  # GUI Options #
+  ###############
+  #Size of GUI. (Must be multiples of 9)
+  GUISize: 27
+  #Name of the GUI displayed when a player clicks the spawner.
+  GUIName: "&6&lCaptcha: %item%"
