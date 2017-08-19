@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class GUI implements Listener {
 	static List<String> items = Main.settings.getItems().getStringList("Items");
@@ -25,6 +26,7 @@ public class GUI implements Listener {
 	static HashMap<Player, Integer> wrong = new HashMap<Player, Integer>();
 	static ArrayList<Player> allowclose = new ArrayList<Player>();
 	HashMap<Player, Integer> starttrack = new HashMap<Player, Integer>();
+	Plugin plugin = Bukkit.getPluginManager().getPlugin("Captchas");
 	int chance = Api.getConfigInt("CaptchaOptions.Chance");
 
 	public static Integer getWrong(Player player) {
@@ -84,7 +86,13 @@ public class GUI implements Listener {
 	@EventHandler
 	public void CaptchaCloseEvent(InventoryCloseEvent e) {
 		if (allowclose.contains(e.getPlayer())) {
-			e.getPlayer().openInventory(e.getInventory());
+			if (chosenslot.containsKey(e.getInventory())) {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+					public void run() {
+						e.getPlayer().openInventory(e.getInventory());
+					}
+				}, 1);
+			}
 		}
 	}
 
@@ -130,6 +138,8 @@ public class GUI implements Listener {
 				}
 			} else {
 				Player player = (Player) e.getWhoClicked();
+				allowclose.remove(player);
+				player.closeInventory();
 				if (Api.getConfigInt("CaptchaOptions.Wrong") <= 1) {
 					for (String line : Main.settings.getConfig().getStringList("CaptchaOptions.Commands")) {
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line);
@@ -139,12 +149,8 @@ public class GUI implements Listener {
 									+ Api.replaceStrikes(player, Api.getMessageString("Messages.Strike"))));
 					player.sendMessage(Api
 							.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Punish")));
-					allowclose.remove(player);
-					player.closeInventory();
 					return;
 				} else {
-					allowclose.remove(player);
-					player.closeInventory();
 					if (wrong.containsKey(player)) {
 						wrong.put(player, wrong.get(player) + 1);
 						player.sendMessage(Api
