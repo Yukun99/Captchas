@@ -1,6 +1,6 @@
 name: Captchas
 author: Yukun
 main: me.Yukun.Captchas.Main
-version: 1.0.1
+version: 1.1.0
 description: >
              A plugin that adds an autoclicker checking captcha to Minecraft.

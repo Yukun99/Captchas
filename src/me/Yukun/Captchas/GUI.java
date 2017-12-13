@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -24,10 +21,12 @@ public class GUI implements Listener {
 	static HashMap<Inventory, Integer> chosenslot = new HashMap<Inventory, Integer>();
 	static HashMap<Player, Inventory> cplayer = new HashMap<Player, Inventory>();
 	static HashMap<Player, Integer> wrong = new HashMap<Player, Integer>();
+	static HashMap<Player, Integer> timer = new HashMap<Player, Integer>();
 	static ArrayList<Player> allowclose = new ArrayList<Player>();
 	HashMap<Player, Integer> starttrack = new HashMap<Player, Integer>();
 	Plugin plugin = Bukkit.getPluginManager().getPlugin("Captchas");
-	int chance = Api.getConfigInt("CaptchaOptions.Chance");
+	int chance = Config.getConfigInt("CaptchaOptions.Chance");
+	static int time = Config.getConfigInt("CaptchaOptions.Timeout");
 
 	public static Integer getWrong(Player player) {
 		if (wrong.containsKey(player)) {
@@ -38,12 +37,12 @@ public class GUI implements Listener {
 	}
 
 	public static void openCaptcha(Player player) {
-		int guiSize = Api.getConfigInt("CaptchaOptions.GUISize") - 1;
+		int guiSize = Config.getConfigInt("CaptchaOptions.GUISize") - 1;
 		int chosen = Api.getRandomNumber(guiSize);
 		Collections.shuffle(items);
 		List<String> items2 = items.subList(0, guiSize + 1);
 		String guiName = Api
-				.color(Api.replaceItemName(Api.getConfigString("CaptchaOptions.GUIName"), items2.get(chosen)));
+				.color(Api.replaceItemName(Config.getConfigString("CaptchaOptions.GUIName"), items2.get(chosen)));
 		if (guiName != null) {
 			Inventory captcha = Bukkit.createInventory(null, guiSize + 1, guiName);
 			chosenslot.put(captcha, chosen);
@@ -57,30 +56,71 @@ public class GUI implements Listener {
 			}
 			if (captcha.getItem(guiSize).getType() != Material.AIR) {
 				player.openInventory(captcha);
+				timer.put(player, Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getPlugin(), new Runnable() {
+					public void run() {
+						allowclose.remove(player);
+						player.closeInventory();
+						if (Config.getConfigInt("CaptchaOptions.Wrong") <= 1) {
+							for (String line : Main.settings.getConfig().getStringList("CaptchaOptions.Commands")) {
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+										line.replace("%player%", player.getName()));
+							}
+							player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+									+ Config.getMessageString("Messages.Wrong")
+									+ Api.replaceStrikes(player, Config.getMessageString("Messages.Strike"))));
+							player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+									+ Config.getMessageString("Messages.Punish")));
+							timer.remove(player);
+							return;
+						} else {
+							if (wrong.containsKey(player)) {
+								wrong.put(player, wrong.get(player) + 1);
+								player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+										+ Config.getMessageString("Messages.Wrong")
+										+ Api.replaceStrikes(player, Config.getMessageString("Messages.Strike"))));
+								if (wrong.get(player) >= Config.getConfigInt("CaptchaOptions.Wrong")) {
+									for (String line : Main.settings.getConfig()
+											.getStringList("CaptchaOptions.Commands")) {
+										Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+												line.replace("%player%", player.getName()));
+									}
+									player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+											+ Config.getMessageString("Messages.Punish")));
+									wrong.remove(player);
+									timer.remove(player);
+									return;
+								}
+								timer.remove(player);
+								return;
+							} else {
+								wrong.put(player, 1);
+								player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+										+ Config.getMessageString("Messages.Wrong")
+										+ Api.replaceStrikes(player, Config.getMessageString("Messages.Strike"))));
+								if (wrong.get(player) >= Config.getConfigInt("CaptchaOptions.Wrong")) {
+									for (String line : Main.settings.getConfig()
+											.getStringList("CaptchaOptions.Commands")) {
+										Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+												line.replace("%player%", player.getName()));
+									}
+									player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+											+ Config.getMessageString("Messages.Punish")));
+									wrong.remove(player);
+									timer.remove(player);
+									return;
+								}
+								timer.remove(player);
+								return;
+							}
+						}
+					}
+				}, time * 20));
 				return;
 			} else {
 				return;
 			}
 		}
 
-	}
-
-	@EventHandler
-	public void CaptchaTriggerEvent(EntityDamageByEntityEvent e) {
-		if (e.getDamager() instanceof Player) {
-			Player player = (Player) e.getDamager();
-			if (e.getEntity() instanceof LivingEntity && !(e.getEntity() instanceof Player)) {
-				Random random = new Random();
-				int a = random.nextInt(chance);
-				int b = random.nextInt(chance);
-				if (a == b) {
-					openCaptcha(player);
-					player.sendMessage(
-							Api.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Open")));
-					return;
-				}
-			}
-		}
 	}
 
 	@EventHandler
@@ -104,35 +144,35 @@ public class GUI implements Listener {
 				Player player = (Player) e.getWhoClicked();
 				allowclose.remove(player);
 				player.closeInventory();
-				if (Api.getConfigBoolean("CaptchaOptions.Clear") == false) {
+				if (Config.getConfigBoolean("CaptchaOptions.Clear") == false) {
 					if (wrong.containsKey(player)) {
-						player.sendMessage(Api
-								.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Right")
-										+ Api.replaceStrikes(player, Api.getMessageString("Messages.Clear"))));
+						player.sendMessage(Api.color(
+								Config.getMessageString("Messages.Prefix") + Config.getMessageString("Messages.Right")
+										+ Api.replaceStrikes(player, Config.getMessageString("Messages.Clear"))));
 						return;
 					} else {
-						player.sendMessage(Api.color(
-								Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Right")));
+						player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+								+ Config.getMessageString("Messages.Right")));
 						return;
 					}
 				} else {
 					if (wrong.containsKey(player)) {
 						if (wrong.get(player) > 1) {
 							wrong.put(player, wrong.get(player) - 1);
-							player.sendMessage(Api.color(
-									Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Right")
-											+ Api.replaceStrikes(player, Api.getMessageString("Messages.Clear"))));
+							player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+									+ Config.getMessageString("Messages.Right")
+									+ Api.replaceStrikes(player, Config.getMessageString("Messages.Clear"))));
 							return;
 						} else {
 							wrong.remove(player);
-							player.sendMessage(Api.color(
-									Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Right")
-											+ Api.replaceStrikes(player, Api.getMessageString("Messages.Clear"))));
+							player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+									+ Config.getMessageString("Messages.Right")
+									+ Api.replaceStrikes(player, Config.getMessageString("Messages.Clear"))));
 							return;
 						}
 					} else {
-						player.sendMessage(Api.color(
-								Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Right")));
+						player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+								+ Config.getMessageString("Messages.Right")));
 						return;
 					}
 				}
@@ -140,43 +180,45 @@ public class GUI implements Listener {
 				Player player = (Player) e.getWhoClicked();
 				allowclose.remove(player);
 				player.closeInventory();
-				if (Api.getConfigInt("CaptchaOptions.Wrong") <= 1) {
+				if (Config.getConfigInt("CaptchaOptions.Wrong") <= 1) {
 					for (String line : Main.settings.getConfig().getStringList("CaptchaOptions.Commands")) {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line);
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("%player%", player.getName()));
 					}
-					player.sendMessage(
-							Api.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Wrong")
-									+ Api.replaceStrikes(player, Api.getMessageString("Messages.Strike"))));
-					player.sendMessage(Api
-							.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Punish")));
+					player.sendMessage(Api.color(
+							Config.getMessageString("Messages.Prefix") + Config.getMessageString("Messages.Wrong")
+									+ Api.replaceStrikes(player, Config.getMessageString("Messages.Strike"))));
+					player.sendMessage(Api.color(
+							Config.getMessageString("Messages.Prefix") + Config.getMessageString("Messages.Punish")));
 					return;
 				} else {
 					if (wrong.containsKey(player)) {
 						wrong.put(player, wrong.get(player) + 1);
-						player.sendMessage(Api
-								.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Wrong")
-										+ Api.replaceStrikes(player, Api.getMessageString("Messages.Strike"))));
-						if (wrong.get(player) >= Api.getConfigInt("CaptchaOptions.Wrong")) {
+						player.sendMessage(Api.color(
+								Config.getMessageString("Messages.Prefix") + Config.getMessageString("Messages.Wrong")
+										+ Api.replaceStrikes(player, Config.getMessageString("Messages.Strike"))));
+						if (wrong.get(player) >= Config.getConfigInt("CaptchaOptions.Wrong")) {
 							for (String line : Main.settings.getConfig().getStringList("CaptchaOptions.Commands")) {
-								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line);
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+										line.replace("%player%", player.getName()));
 							}
-							player.sendMessage(Api.color(
-									Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Punish")));
+							player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+									+ Config.getMessageString("Messages.Punish")));
 							wrong.remove(player);
 							return;
 						}
 						return;
 					} else {
 						wrong.put(player, 1);
-						player.sendMessage(Api
-								.color(Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Wrong")
-										+ Api.replaceStrikes(player, Api.getMessageString("Messages.Strike"))));
-						if (wrong.get(player) >= Api.getConfigInt("CaptchaOptions.Wrong")) {
+						player.sendMessage(Api.color(
+								Config.getMessageString("Messages.Prefix") + Config.getMessageString("Messages.Wrong")
+										+ Api.replaceStrikes(player, Config.getMessageString("Messages.Strike"))));
+						if (wrong.get(player) >= Config.getConfigInt("CaptchaOptions.Wrong")) {
 							for (String line : Main.settings.getConfig().getStringList("CaptchaOptions.Commands")) {
-								Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line);
+								Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+										line.replace("%player%", player.getName()));
 							}
-							player.sendMessage(Api.color(
-									Api.getMessageString("Messages.Prefix") + Api.getMessageString("Messages.Punish")));
+							player.sendMessage(Api.color(Config.getMessageString("Messages.Prefix")
+									+ Config.getMessageString("Messages.Punish")));
 							wrong.remove(player);
 							return;
 						}
