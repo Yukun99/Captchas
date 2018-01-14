@@ -10,6 +10,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.Yukun.Captchas.SettingsManager;
+import me.Yukun.Captchas.Triggers.BlockBreakEventTrigger;
+import me.Yukun.Captchas.Triggers.EntityDamageByEntityEventTrigger;
+import me.Yukun.Captchas.Triggers.PlayerFishEventTrigger;
 import me.Yukun.Captchas.Api;
 
 public class Main extends JavaPlugin implements Listener {
