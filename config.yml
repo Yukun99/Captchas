@@ -16,7 +16,7 @@ CaptchaOptions:
   #Whether to reduce wrong answer count when a correct item is clicked. (false disables Clear message)
   Clear: true
   #Commands to run when player answers captcha wrongly. These HAVE to be console commands!
-  Commands: #Jail or a similar command is strong encouraged so the player cannot warp out!
+  Commands: #Jail or a similar command is strongly encouraged so that the player cannot warp out!
     - 'jail %player%'
     - 'mute %player%'
     - 'report %player% autoclick'

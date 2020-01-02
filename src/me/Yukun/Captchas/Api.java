@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
@@ -46,8 +47,7 @@ public class Api {
 			name = name.replace("PLATE", "PRESSURE PLATE");
 			msg = msg.replace("%item%", name);
 			return msg;
-		} else if (!name.equalsIgnoreCase("GOLD_INGOT") && !name.equalsIgnoreCase("GOLD_NUGGET")
-				&& (!name.contains("PLATE") || name.contains("CHESTPLATE")) && name.contains("GOLD")) {
+		} else if (!name.equalsIgnoreCase("GOLD_INGOT") && !name.equalsIgnoreCase("GOLD_NUGGET") && (!name.contains("PLATE") || name.contains("CHESTPLATE")) && name.contains("GOLD")) {
 			name = name.replace("_", " ");
 			name = name.replace("GOLD", "GOLDEN");
 			msg = msg.replace("%item%", name);
@@ -74,7 +74,7 @@ public class Api {
 			return msg;
 		}
 	}
-	
+
 	static int getRandomNumber(int range) {
 		Random random = new Random();
 		return random.nextInt(range - 1);
@@ -92,8 +92,16 @@ public class Api {
 	public static ItemStack getItem(String name) {
 		String[] msg = name.split(":");
 		Material mat = Material.getMaterial(msg[0]);
-		ItemStack item = new ItemStack(mat, 1, Short.parseShort(msg[1]));
-		return item;
+		if (getVersion() > 1122) {
+			ItemStack item = new ItemStack(mat, 1);
+			Damageable d = (Damageable) item;
+			d.setDamage(Short.parseShort(msg[1]));
+			return item;
+		} else {
+			@SuppressWarnings("deprecation")
+			ItemStack item = new ItemStack(mat, 1, Short.parseShort(msg[1]));
+			return item;
+		}
 	}
 
 	public static boolean containsItem(Player player, ItemStack item) {
@@ -138,12 +146,8 @@ public class Api {
 		return msg;
 	}
 
-
-
 	public static String replacePHolders(String msg, Player player, String rank) {
-		return msg
-				.replace("%rank%", Main.settings.getConfig().getString("RankQuestOptions.Ranks." + rank + ".RankName"))
-				.replace("%player%", player.getDisplayName());
+		return msg.replace("%rank%", Main.settings.getConfig().getString("RankQuestOptions.Ranks." + rank + ".RankName")).replace("%player%", player.getDisplayName());
 	}
 
 	public static Integer getVersion() {
