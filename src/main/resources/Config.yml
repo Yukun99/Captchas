@@ -151,8 +151,6 @@ Filter:
 Integration:
   # Whether to integrate with AuthMe and only check players after they have logged in.
   AuthMe: False
-  # Whether to integrate with LockLogin and only check players after they have logged in.
-  LockLogin: False
 
 ###############
 # GUI Options #

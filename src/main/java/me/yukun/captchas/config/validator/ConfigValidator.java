@@ -77,7 +77,6 @@ public class ConfigValidator implements IValidator {
     put("Filter.Invert", FieldTypeEnum.BOOLEAN);
     put("Filter.Blocks", FieldTypeEnum.STRINGLIST);
     put("Integration.AuthMe", FieldTypeEnum.BOOLEAN);
-    put("Integration.LockLogin", FieldTypeEnum.BOOLEAN);
     put("GUI.Size", FieldTypeEnum.INTEGER);
     put("GUI.Name", FieldTypeEnum.STRING);
   }};

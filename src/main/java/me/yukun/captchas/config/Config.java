@@ -214,11 +214,6 @@ public class Config {
         .isPluginEnabled("AuthMe");
   }
 
-  public static boolean doIntegrationLockLogin() {
-    return config.getBoolean("Integration.LockLogin") && Bukkit.getPluginManager()
-        .isPluginEnabled("LockLogin");
-  }
-
   public static int getGUISize() {
     return config.getInt("GUI.Size");
   }
