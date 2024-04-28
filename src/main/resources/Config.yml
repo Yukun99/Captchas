@@ -1,0 +1,162 @@
+# Placeholders:
+# %item% --> item to click in captcha (Usable in GUIName)
+# %player% --> player to execute command on (Usable in any Commands)
+
+###################
+# General Options #
+###################
+# Whether to disable captchas for opped players.
+IgnoreOpped: True
+# Options to allow players some leeway for wrong answers.
+# It's hard to stop spam clicking sometimes, be nice!
+# If both are enabled, players will get more tries if either option still allows them to be pardoned.
+# If both are enabled, grace tries will not be used while grace time is active.
+Grace:
+  # Time in seconds from start of captcha when wrong answers are ignored. (NO DECIMALS)
+  Time:
+    Enable: True
+    Value: 5
+  # Number of incorrect tries from start of captchas that are ignored. (NO DECIMALS)
+  Tries:
+    Enable: True
+    Value: 3
+# Time given for player to complete the captcha in seconds. (NO DECIMALS)
+Duration:
+  Enable: True
+  Time: 100
+# Time in seconds after a player completes a captcha before they start gettting checked again. (NO DECIMALS)
+Cooldown:
+  Enable: True
+  Time: 300
+# How many seconds before captcha trigger to warn players at. (NO DECIMALS)
+Warning:
+  Enable: True
+  Time: 5
+
+######################
+# Completion Options #
+######################
+# What to do if player gets captcha right.
+Correct:
+  # Whether to reduce wrong answer count when a correct item is clicked.
+  # Very punishing if off, unless you reset the Players.yml file by deleteing it yourself once in a while.
+  Clear: True
+  # Rewards when player answers captcha correctly. These MUST be console commands!
+  Reward:
+    Enable: True
+    Commands:
+      - "unfreeze %player%"
+      - "eco give %player% 100"
+# What to do if player gets captcha wrong.
+# Only triggers if player is out of grace chances/time.
+Wrong:
+  # Number of wrong answers player must accumulate before punishment. Minimum 1.
+  MaxWrong: 3
+  # Punishment when player reaches MaxWrong threshold. These MUST be console commands!
+  # If you have MaxWrong set to 1 consider using commands such as Warn.
+  Punish:
+    Enable: True
+    Commands:
+      - "mute %player%"
+      - "report %player% autoclick"
+
+######################
+# First Join Options #
+######################
+# Trigger when player first joins the server.
+FirstJoin:
+  Enable: True
+  Ignore:
+    # Whether to ignore grace and immediately count any wrong answer for new players.
+    Grace: True
+    # Whether to ignore strikes and immediately punish on wrong answer for new players.
+    Strikes: True
+    # Whether to ignore captcha warning time and immediately open captcha for new players.
+    # This will only work if Duration.Warning is set to True.
+    Warning: True
+  # Override completion time allowed for new players.
+  # This will only work if Duration.Enable is set to True.
+  OverrideDuration:
+    Enable: True
+    # Shorter completion time in seconds allowed for new players.
+    Value: 30
+  # Extra punishments to run for new players who get the captcha wrong and are out of strikes.
+  ExtraPunish:
+    Enable: True
+    # These commands will be run AFTER the punishment commands in the Wrong section.
+    Commands:
+      - "kick %player%"
+
+###################
+# Trigger Options #
+###################
+# Whether to run commands on players when the captcha gets triggered.
+# This allows you to make sure players cannot do anything before they complete the captchas.
+# Make sure to unfreeze them somehow in the Reward commands if you freeze them here.
+OnTrigger:
+  Enable: True
+  Commands:
+    - "freeze %player%"
+Triggers:
+  # Chance to trigger when player catches an item successfully.
+  CatchFish:
+    Enable: True
+    # Chance for captcha to open.
+    # 200 means 1/200 chance for fishing to trigger captcha.
+    Chance: 200
+  # Chance to trigger when player kills mobs.
+  KillMob:
+    Enable: True
+    Chance: 1000
+    #Whether to trigger captcha ONLY on spawner mobs.
+    SpawnerOnly: True
+  # Chance to trigger when player breaks blocks.
+  BreakBlock:
+    Enable: True
+    Chance: 2000
+
+########################
+# Block Filter Options #
+########################
+# Filter for which block trigger captchas when broken.
+# Filter acts as a blacklist by default. Blocks listed will not be rolled for captcha.
+# Don't worry this won't error even if what you put doesn't exist, the wrong values will just get ignored ;)
+# Check out https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html for valid values
+# Some item names are different in older versions of minecraft.
+# Please check older spigot javadocs (on google) if you are using an older version of Minecraft.
+# Still don't know what you're doing? Try asking around on forums, or ask on the plugin thread :P
+Filter:
+  # Whether to use a filter to not trigger the captcha when mining certain blocks.
+  Enable: True
+  # Whether to turn the filter into a whitelist.
+  # Settings this to True means that ONLY blocks listed below trigger captchas when mined.
+  Invert: False
+  Blocks:
+    - "STONE"
+    - "COBBLESTONE"
+    - "ANDESITE"
+    - "GRANITE"
+    - "DIORITE"
+    - "DIRT"
+    - "GRASS_BLOCK"
+    - "SAND"
+    - "SANDSTONE"
+    - "OBSIDIAN"
+    - "GRASS"
+    - "TALL_GRASS"
+
+#######################
+# Integration Options #
+#######################
+Integration:
+  # Whether to integrate with AuthMe and only check players after they have logged in.
+  AuthMe: False
+
+###############
+# GUI Options #
+###############
+GUI:
+  # Number of items in the Captchas GUI. (Must be multiples of 9)
+  Size: 45
+  # Name of the GUI displayed when a player clicks the spawner.
+  Name: "&b&lCaptcha:&r %item%"

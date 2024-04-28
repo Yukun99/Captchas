@@ -1,0 +1,10 @@
+/.idea/.gitignore
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
+/target/maven-archiver/pom.properties
+/target/
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/compiler.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml

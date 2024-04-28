@@ -1,0 +1,44 @@
+# Placeholders:
+# %strikes% --> number of strikes (usable in Right, Wrong)
+# %cooldown% --> cooldown time in seconds (usable in Right)
+# %warn% --> warning time in seconds before captcha opening (usable in Warning)
+# %time% --> time in seconds to complete captcha in (usable in Open, Warning)
+
+#Prefix before all messages.
+Prefix: "&bCapt&echas&f >> &7"
+#Message sent when captcha opens.
+Open: "Captcha triggered! Please click the right item in %time% seconds."
+#Message sent to warn players before the captcha is opened.
+Warning: "&cA captcha will open in %warn% seconds. You will have %time% seconds to complete the captcha."
+#Message sent when a player tries to click during the grace period.
+Grace: "&7Wrong answer, but grace period is active! Please click the correct answer!"
+
+Right: "&aCorrect answer. You won't be checked for %cooldown% seconds. %strikes% strike(s) remain!"
+Wrong: "&cWrong answer. Strike %strikes%!"
+
+#Message sent when punishment commands are executed.
+Punish: "&cYou are suspected of autoclicking! Please wait while staff members check on you."
+#######################################################################################################################
+# Question: OMG I'M STILL CONFUSED WHAT DOES ALL THIS MEAN????                                                        #
+# Answer:                                                                                                             #
+# This default config will send messages like the following:                                                          #
+#     - Wrong answer when player has 0 strikes CURRENTLY:                                                             #
+#         "Captchas >> You have clicked the wrong item."                                                              #
+#         "Captchas >> Strike 1!"                                                                                     #
+#     - Wrong answer when player has 1 strike CURRENTLY:                                                              #
+#         "Captchas >> You have clicked the wrong item."                                                              #
+#         "Captchas >> Strike 2!"                                                                                     #
+#     - Wrong answer when player has 2 strikes CURRENTLY:                                                             #
+#         "Captchas >> You have clicked the wrong item."                                                              #
+#         "Captchas >> Strike 3!"                                                                                     #
+#     - On punishment:                                                                                                #
+#         "Captchas >> You are suspected of autoclicking! Please wait while staff members check on you."              #
+#     - Correct answer when player has 0 strikes CURRENTLY:                                                           #
+#         "Captchas >> You have clicked the right item! You will not be checked for 300 seconds."                     #
+#     - Correct answer when player has 1 strike CURRENTLY:                                                            #
+#         "Captchas >> You have clicked the right item!"                                                              #
+#         "Captchas >> 0 strike(s) remaining!"                                                                        #
+#     - Correct answer when player has 2 strikes CURRENTLY:                                                           #
+#         "Captchas >> You have clicked the right item!"                                                              #
+#         "Captchas >> 1 strike(s) remaining!"                                                                        #
+#######################################################################################################################
