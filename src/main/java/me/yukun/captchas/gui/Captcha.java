@@ -7,7 +7,7 @@ import java.util.Set;
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.config.Messages;
 import me.yukun.captchas.config.Players;
-import me.yukun.captchas.integrations.IntegrationManager;
+import me.yukun.captchas.integration.IntegrationManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

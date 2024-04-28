@@ -1,4 +1,4 @@
-package me.yukun.captchas.triggers;
+package me.yukun.captchas.trigger;
 
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.gui.Captcha;

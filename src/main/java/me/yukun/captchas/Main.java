@@ -1,16 +1,16 @@
 package me.yukun.captchas;
 
 import java.util.Objects;
-import me.yukun.captchas.commands.CommandManager;
+import me.yukun.captchas.command.CommandManager;
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.config.FileManager;
 import me.yukun.captchas.config.Messages;
 import me.yukun.captchas.gui.CaptchaListener;
-import me.yukun.captchas.integrations.IntegrationManager;
-import me.yukun.captchas.triggers.BreakBlockTrigger;
-import me.yukun.captchas.triggers.CatchFishTrigger;
-import me.yukun.captchas.triggers.FirstJoinTrigger;
-import me.yukun.captchas.triggers.KillMobTrigger;
+import me.yukun.captchas.integration.IntegrationManager;
+import me.yukun.captchas.trigger.BreakBlockTrigger;
+import me.yukun.captchas.trigger.CatchFishTrigger;
+import me.yukun.captchas.trigger.FirstJoinTrigger;
+import me.yukun.captchas.trigger.KillMobTrigger;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package me.yukun.captchas.commands;
+package me.yukun.captchas.command;
 
 import org.bukkit.command.CommandSender;
 
