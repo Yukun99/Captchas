@@ -36,7 +36,7 @@ public class KillMobTrigger implements Listener, ITrigger {
     if (RANDOM.nextInt(Config.getTriggerKillMobChance()) != 0) {
       return;
     }
-    new Captcha(killer, true);
+    new Captcha(killer, false);
   }
 
   private boolean canTrigger(EntityDeathEvent e) {

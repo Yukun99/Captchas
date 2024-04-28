@@ -22,6 +22,6 @@ public class CatchFishTrigger implements Listener, ITrigger {
     if (RANDOM.nextInt(Config.getTriggerCatchFishChance()) != 0) {
       return;
     }
-    new Captcha(e.getPlayer(), true);
+    new Captcha(e.getPlayer(), false);
   }
 }

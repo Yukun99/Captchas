@@ -22,6 +22,6 @@ public class BreakBlockTrigger implements Listener, ITrigger {
     if (RANDOM.nextInt(Config.getTriggerBreakBlockChance()) != 0) {
       return;
     }
-    new Captcha(e.getPlayer(), true);
+    new Captcha(e.getPlayer(), false);
   }
 }
