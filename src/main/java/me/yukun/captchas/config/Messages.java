@@ -27,6 +27,8 @@ public class Messages {
   private static final String HELP_ALIASES = "Command aliases: captchas, captcha, cpc";
   private static final String HELP_HELP = "/captchas help: Shows commands, aliases and permissions.";
   private static final String HELP_RELOAD = "/captchas reload: Reloads all configuration files.";
+  private static final String HELP_OPEN = "/captchas open (player): Force opens captcha for specified player.";
+  private static final String HELP_CLOSE = "/captchas close (player): Force closes captcha for specified player.";
   private static final String HELP_PERMISSIONS = "&b&l----------Permissions----------";
   private static final String HELP_WILDCARD = "captchas.*: All permissions combined";
   private static final String HELP_ADMIN = "captchas.admin: Ability to use commands + admin.bypass";
@@ -249,6 +251,8 @@ public class Messages {
     commandSender.sendMessage(applyColor(HELP_ALIASES));
     commandSender.sendMessage(applyColor(HELP_HELP));
     commandSender.sendMessage(applyColor(HELP_RELOAD));
+    commandSender.sendMessage(applyColor(HELP_OPEN));
+    commandSender.sendMessage(applyColor(HELP_CLOSE));
     commandSender.sendMessage(applyColor(HELP_PERMISSIONS));
     commandSender.sendMessage(applyColor(HELP_WILDCARD));
     commandSender.sendMessage(applyColor(HELP_ADMIN));
