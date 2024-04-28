@@ -16,7 +16,6 @@ public class FirstJoinTrigger implements Listener, ITrigger {
     if (!Players.isFirstJoin(e.getPlayer())) {
       return;
     }
-    Players.saveFirstJoin(e.getPlayer());
     new Captcha(e.getPlayer(), true);
   }
 }

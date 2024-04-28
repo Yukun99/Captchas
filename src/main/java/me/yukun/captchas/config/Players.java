@@ -36,9 +36,10 @@ public class Players {
    *
    * @param player Player that just joined the server for the first time.
    */
-  public static void saveFirstJoin(Player player) {
-    playerStrikesMap.put(player.getUniqueId(), 0);
-    players.set("Players." + player.getUniqueId(), 0);
+  public static void saveFirstJoin(Player player, boolean isCorrect) {
+    int strikes = isCorrect ? 0 : Config.getWrongMaxWrong();
+    playerStrikesMap.put(player.getUniqueId(), strikes);
+    players.set("Players." + player.getUniqueId(), strikes);
   }
 
   /**

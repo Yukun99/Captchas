@@ -5,6 +5,7 @@ import fr.xephi.authme.events.LoginEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class AuthMe implements Listener {
 
@@ -14,9 +15,17 @@ public class AuthMe implements Listener {
 
   @EventHandler
   private void PlayerAuthMeLoginEvent(LoginEvent e) {
-    if (!IntegrationManager.isInQueue(e.getPlayer())) {
+    if (IntegrationManager.notInQueue(e.getPlayer())) {
       return;
     }
     IntegrationManager.startCaptcha(e.getPlayer());
+  }
+
+  @EventHandler
+  private void PlayerAuthmeLeaveEvent(PlayerQuitEvent e) {
+    if (IntegrationManager.notInQueue(e.getPlayer())) {
+      return;
+    }
+    IntegrationManager.dequeueCaptcha(e.getPlayer());
   }
 }

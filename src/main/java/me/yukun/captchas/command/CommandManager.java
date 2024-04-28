@@ -1,12 +1,13 @@
 package me.yukun.captchas.command;
 
 import me.yukun.captchas.config.Config;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
 
 public class CommandManager implements CommandExecutor {
 
@@ -27,6 +28,18 @@ public class CommandManager implements CommandExecutor {
         } else {
           captchaCommand = new HelpCommand(sender);
         }
+        break;
+      case 2:
+        if (Bukkit.getPlayer(args[1]) == null) {
+          captchaCommand = new CaptchaCommand(sender);
+          break;
+        }
+        Player player = Bukkit.getPlayer(args[1]);
+        captchaCommand = switch (args[0]) {
+          case "open" -> new OpenCommand(sender, player);
+          case "close" -> new CloseCommand(sender, player);
+          default -> new CaptchaCommand(sender);
+        };
         break;
       default:
         captchaCommand = new CaptchaCommand(sender);

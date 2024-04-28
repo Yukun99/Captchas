@@ -24,8 +24,13 @@ public class IntegrationManager {
     playerCaptchaMap.put(player, captcha);
   }
 
-  protected static boolean isInQueue(Player player) {
-    return playerCaptchaMap.containsKey(player);
+  protected static void dequeueCaptcha(Player player) {
+    playerCaptchaMap.get(player).clickWrong(true);
+    playerCaptchaMap.remove(player);
+  }
+
+  protected static boolean notInQueue(Player player) {
+    return !playerCaptchaMap.containsKey(player);
   }
 
   public static void startCaptcha(Player player) {

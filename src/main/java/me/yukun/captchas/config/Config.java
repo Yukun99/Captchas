@@ -115,11 +115,15 @@ public class Config {
     return config.getStringList("Correct.Reward.Commands");
   }
 
+  public static int getWrongMaxWrong() {
+    return config.getInt("Wrong.MaxWrong");
+  }
+
   public static boolean isWrongMaxWrong(int strikes) {
     if (doFirstJoinIgnoreStrikes()) {
       return true;
     }
-    return strikes == config.getInt("Wrong.MaxWrong");
+    return strikes == getWrongMaxWrong();
   }
 
   public static boolean doWrongPunish() {

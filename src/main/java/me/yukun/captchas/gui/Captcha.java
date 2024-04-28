@@ -1,6 +1,8 @@
 package me.yukun.captchas.gui;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class Captcha {
   private static final Random RANDOM = new Random();
   private static final Plugin PLUGIN = Objects.requireNonNull(
       Bukkit.getPluginManager().getPlugin("Captchas"));
+  private static final Map<Player, Captcha> targetCaptchaMap = new HashMap<>();
   // Players on captcha cooldown
   private static final Set<Player> cooldowns = new HashSet<>();
   // General variables
@@ -40,7 +43,7 @@ public class Captcha {
     this.target = player;
     this.isFirstJoin = isFirstJoin;
     this.slot = RANDOM.nextInt(Config.getGUISize());
-    if (!IntegrationManager.isAuthenticated(target)) {
+    if (isFirstJoin && !IntegrationManager.isAuthenticated(target)) {
       IntegrationManager.queueCaptcha(target, this);
     } else {
       beginCaptcha();
@@ -145,6 +148,7 @@ public class Captcha {
     Messages.sendOpen(target, duration);
     target.openInventory(inventory);
     CaptchaListener.startCaptcha(this, inventory, slot);
+    targetCaptchaMap.put(target, this);
   }
 
   /**
@@ -156,6 +160,30 @@ public class Captcha {
     }
     CaptchaListener.endCaptcha(inventory);
     target.closeInventory();
+    targetCaptchaMap.remove(target);
+  }
+
+  /**
+   * Opens captcha GUI for specified player.
+   *
+   * @param player Player to open captch GUI for.
+   */
+  public static void openPlayerCaptcha(Player player) {
+    if (!targetCaptchaMap.containsKey(player)) {
+      player.closeInventory();
+      new Captcha(player, false);
+    }
+  }
+
+  /**
+   * Stops captcha GUI tracking and closes captcha inventory for specified player.
+   *
+   * @param player Player to stop captcha GUI tracking and close captcha inventory for.
+   */
+  public static void closePlayerCaptcha(Player player) {
+    if (targetCaptchaMap.containsKey(player)) {
+      targetCaptchaMap.get(player).clickRight();
+    }
   }
 
   /**
@@ -168,6 +196,9 @@ public class Captcha {
     if (!ignoreGrace && useGrace()) {
       Messages.sendGrace(target);
       return;
+    }
+    if (isFirstJoin) {
+      Players.saveFirstJoin(target, false);
     }
     int strikes = Players.addStrike(target);
     Messages.sendWrong(target, strikes);
@@ -202,6 +233,9 @@ public class Captcha {
    * player too.
    */
   public void clickRight() {
+    if (isFirstJoin) {
+      Players.saveFirstJoin(target, true);
+    }
     int strikes = 0;
     if (Config.doCorrectClear()) {
       strikes = Players.removeStrike(target);
