@@ -6,7 +6,7 @@
 
   <groupId>me.yukun</groupId>
   <artifactId>CaptchasX</artifactId>
-  <version>1.0.1a</version>
+  <version>1.0.1b</version>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
