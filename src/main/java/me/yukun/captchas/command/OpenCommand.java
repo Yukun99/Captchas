@@ -5,7 +5,7 @@ import me.yukun.captchas.gui.Captcha;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class OpenCommand extends CaptchaCommand {
+public class OpenCommand extends CaptchasCommand {
 
   Player player;
 

@@ -31,7 +31,7 @@ public class Messages {
   private static final String HELP_CLOSE = "/captchas close (player): Force closes captcha for specified player.";
   private static final String HELP_PERMISSIONS = "&b&l----------Permissions----------";
   private static final String HELP_WILDCARD = "captchas.*: All permissions combined";
-  private static final String HELP_ADMIN = "captchas.admin: Ability to use commands + admin.bypass";
+  private static final String HELP_ADMIN = "captchas.admin: Ability to use commands + captchas.bypass";
   private static final String HELP_BYPASS = "captchas.bypass: Immunity to captcha checking.";
   private static final String HELP_FOOTER = "&b&l======================================";
   private static final String RELOAD_SUCCESS = "&aReload successful!";

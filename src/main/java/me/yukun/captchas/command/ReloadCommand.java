@@ -6,7 +6,7 @@ import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ReloadCommand extends CaptchaCommand {
+public class ReloadCommand extends CaptchasCommand {
 
   public ReloadCommand(CommandSender sender) {
     super(sender);

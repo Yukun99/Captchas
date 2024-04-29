@@ -17,32 +17,27 @@ public class CommandManager implements CommandExecutor {
     if (!(sender instanceof ConsoleCommandSender) || !Config.hasCommandPermissions(sender)) {
       return false;
     }
-    CaptchaCommand captchaCommand;
+    CaptchasCommand captchaCommand;
     switch (args.length) {
-      case 0:
-        captchaCommand = new HelpCommand(sender);
-        break;
       case 1:
         if (args[0].equals("reload")) {
           captchaCommand = new ReloadCommand(sender);
-        } else {
-          captchaCommand = new HelpCommand(sender);
+          break;
         }
-        break;
       case 2:
         if (Bukkit.getPlayer(args[1]) == null) {
-          captchaCommand = new CaptchaCommand(sender);
+          captchaCommand = new HelpCommand(sender);
           break;
         }
         Player player = Bukkit.getPlayer(args[1]);
         captchaCommand = switch (args[0]) {
           case "open" -> new OpenCommand(sender, player);
           case "close" -> new CloseCommand(sender, player);
-          default -> new CaptchaCommand(sender);
+          default -> new HelpCommand(sender);
         };
         break;
       default:
-        captchaCommand = new CaptchaCommand(sender);
+        captchaCommand = new HelpCommand(sender);
     }
     return captchaCommand.execute();
   }
