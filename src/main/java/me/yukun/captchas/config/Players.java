@@ -59,6 +59,9 @@ public class Players {
    * @return Number of strikes specified player has after adding a strike.
    */
   public static int addStrike(Player player) {
+    if (isFirstJoin(player)) {
+      playerStrikesMap.put(player.getUniqueId(), 0);
+    }
     int strikes = playerStrikesMap.get(player.getUniqueId());
     playerStrikesMap.put(player.getUniqueId(), ++strikes);
     players.set("Players." + player.getUniqueId(), strikes);
@@ -72,6 +75,9 @@ public class Players {
    * @return Number of strikes specified player has after removing a strike.
    */
   public static int removeStrike(Player player) {
+    if (isFirstJoin(player)) {
+      playerStrikesMap.put(player.getUniqueId(), 0);
+    }
     int strikes = playerStrikesMap.get(player.getUniqueId());
     if (strikes == 0) {
       return strikes;

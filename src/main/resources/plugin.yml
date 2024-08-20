@@ -1,7 +1,7 @@
 name: Captchas
 author: Yukun
 main: me.yukun.captchas.Main
-version: 1.0.1b
+version: 1.0.1d
 api-version: 1.20
 softdepend: [ AuthMe ]
 description: >

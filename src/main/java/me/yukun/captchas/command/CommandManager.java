@@ -19,12 +19,14 @@ public class CommandManager implements CommandExecutor {
     }
     CaptchasCommand captchaCommand;
     switch (args.length) {
-      case 1:
+      case 1 -> {
         if (args[0].equals("reload")) {
           captchaCommand = new ReloadCommand(sender);
           break;
         }
-      case 2:
+        captchaCommand = new HelpCommand(sender);
+      }
+      case 2 -> {
         if (Bukkit.getPlayer(args[1]) == null) {
           captchaCommand = new HelpCommand(sender);
           break;
@@ -35,9 +37,8 @@ public class CommandManager implements CommandExecutor {
           case "close" -> new CloseCommand(sender, player);
           default -> new HelpCommand(sender);
         };
-        break;
-      default:
-        captchaCommand = new HelpCommand(sender);
+      }
+      default -> captchaCommand = new HelpCommand(sender);
     }
     return captchaCommand.execute();
   }
