@@ -1,6 +1,7 @@
 package me.yukun.captchas.command;
 
 import me.yukun.captchas.config.Config;
+import me.yukun.captchas.config.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,7 +15,8 @@ public class CommandManager implements CommandExecutor {
   @Override
   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
       @NotNull String label, @NotNull String[] args) {
-    if (!(sender instanceof ConsoleCommandSender) || !Config.hasCommandPermissions(sender)) {
+    if (!(sender instanceof ConsoleCommandSender) && !Config.hasCommandPermissions(sender)) {
+      Messages.sendNoPermission(sender);
       return false;
     }
     CaptchasCommand captchaCommand;

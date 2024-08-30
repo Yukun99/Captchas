@@ -37,6 +37,7 @@ public class Messages {
   private static final String RELOAD_SUCCESS = "&aReload successful!";
   private static final String OPEN_SUCCESS = "&aCaptcha opened for specified player.";
   private static final String CLOSE_SUCCESS = "&aCaptcha closed for specified player.";
+  private static final String NO_PERMISSION = "&cYou do not have permission to use the command!";
   // Prefix appended before all messages.
   private static String prefix = "&bCapt&echas&f >> &7";
   // Messages sent to players.
@@ -261,7 +262,7 @@ public class Messages {
   }
 
   /**
-   * Send config reloaded message to player.
+   * Send config reloaded message to command sender.
    *
    * @param commandSender CommandSender to send reloaded message to.
    */
@@ -270,7 +271,7 @@ public class Messages {
   }
 
   /**
-   * Send captcha opening success message to player.
+   * Send captcha opening success message to command sender.
    *
    * @param sender CommandSender to send captcha opening success message to.
    */
@@ -279,11 +280,20 @@ public class Messages {
   }
 
   /**
-   * Send captcha closing success message to player.
+   * Send captcha closing success message to command sender.
    *
    * @param sender CommandSender to send captcha closing success message to.
    */
   public static void sendCloseSuccess(CommandSender sender) {
     sender.sendMessage(applyColor(prefix + CLOSE_SUCCESS));
+  }
+
+  /**
+   * Send no permission message to command sender.
+   *
+   * @param sender CommandSender to send no permission message to.
+   */
+  public static void sendNoPermission(CommandSender sender) {
+    sender.sendMessage(applyColor(prefix + NO_PERMISSION));
   }
 }
