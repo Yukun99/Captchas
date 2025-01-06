@@ -18,6 +18,10 @@ public class IntegrationManager {
       pm.registerEvents(new AuthMe(), plugin);
       Messages.printIntegrationEnabled("AuthMe");
     }
+    if (Config.doIntegrationNLogin()) {
+      pm.registerEvents(new NLogin(), plugin);
+      Messages.printIntegrationEnabled("nLogin");
+    }
   }
 
   public static void queueCaptcha(Player player, Captcha captcha) {
@@ -41,6 +45,9 @@ public class IntegrationManager {
   public static boolean isAuthenticated(Player player) {
     if (Config.doIntegrationAuthMe()) {
       return AuthMe.isAuthenticated(player);
+    }
+    if (Config.doIntegrationNLogin()) {
+      return NLogin.isAuthenticated(player);
     }
     return true;
   }

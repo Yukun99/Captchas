@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigValidator implements IValidator {
 
-  private final List<String> SECTIONS = new ArrayList<>(18) {{
+  private final List<String> SECTIONS = new ArrayList<>(22) {{
     add("Grace");
     add("Grace.Time");
     add("Grace.Tries");
@@ -38,7 +38,7 @@ public class ConfigValidator implements IValidator {
     add("GUI");
   }};
 
-  private final Map<String, FieldTypeEnum> FIELDS = new HashMap<>(37) {{
+  private final Map<String, FieldTypeEnum> FIELDS = new HashMap<>(41) {{
     put("IgnoreOpped", FieldTypeEnum.BOOLEAN);
     put("Grace.Time.Enable", FieldTypeEnum.BOOLEAN);
     put("Grace.Time.Value", FieldTypeEnum.INTEGER);
@@ -77,6 +77,7 @@ public class ConfigValidator implements IValidator {
     put("Filter.Invert", FieldTypeEnum.BOOLEAN);
     put("Filter.Blocks", FieldTypeEnum.STRINGLIST);
     put("Integration.AuthMe", FieldTypeEnum.BOOLEAN);
+    put("Integration.NLogin", FieldTypeEnum.BOOLEAN);
     put("GUI.Size", FieldTypeEnum.INTEGER);
     put("GUI.Name", FieldTypeEnum.STRING);
   }};

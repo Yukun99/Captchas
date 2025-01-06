@@ -151,6 +151,8 @@ Filter:
 Integration:
   # Whether to integrate with AuthMe and only check players after they have logged in.
   AuthMe: False
+  # Whether to integrate with nLogin and only check players after they have logged in.
+  NLogin: False
 
 ###############
 # GUI Options #

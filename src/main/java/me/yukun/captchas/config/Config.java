@@ -218,6 +218,11 @@ public class Config {
         .isPluginEnabled("AuthMe");
   }
 
+  public static boolean doIntegrationNLogin() {
+    return config.getBoolean("Integration.NLogin") && Bukkit.getPluginManager()
+        .isPluginEnabled("nLogin");
+  }
+
   public static int getGUISize() {
     return config.getInt("GUI.Size");
   }
