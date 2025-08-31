@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class FirstJoinTrigger implements Listener, ITrigger {
 
   @EventHandler
-  private void PlayerFirstJoinEvent(PlayerJoinEvent e) {
+  private void playerFirstJoinEvent(PlayerJoinEvent e) {
     if (cannotStart(e.getPlayer())) {
       return;
     }

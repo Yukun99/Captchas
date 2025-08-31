@@ -1,7 +1,5 @@
 package me.yukun.captchas.trigger;
 
-import java.util.Objects;
-import java.util.Random;
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.gui.Captcha;
 import org.bukkit.Bukkit;
@@ -13,6 +11,9 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Objects;
+import java.util.Random;
+
 public class KillMobTrigger implements Listener, ITrigger {
 
   private static final Plugin PLUGIN = Objects.requireNonNull(
@@ -20,12 +21,12 @@ public class KillMobTrigger implements Listener, ITrigger {
   private static final Random RANDOM = new Random();
 
   @EventHandler
-  private void SpawnerSpawnEvent(SpawnerSpawnEvent e) {
+  private void spawnerSpawnEvent(SpawnerSpawnEvent e) {
     e.getEntity().setMetadata("CAPTCHAS_SPAWNER", new FixedMetadataValue(PLUGIN, true));
   }
 
   @EventHandler
-  private void PlayerKillMobEvent(EntityDeathEvent e) {
+  private void playerKillMobEvent(EntityDeathEvent e) {
     if (!canTrigger(e)) {
       return;
     }

@@ -1,4 +1,4 @@
-# Captchas v1.0.1e
+# Captchas v1.0.3
 Complete rewriting of old captchas plugin with bunch of QoL features for server admins.
 Honestly very overengineered but I think this code could be reused.
 

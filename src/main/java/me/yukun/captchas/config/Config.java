@@ -1,11 +1,5 @@
 package me.yukun.captchas.config;
 
-import static me.yukun.captchas.util.TextFormatter.applyColor;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -14,7 +8,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import static me.yukun.captchas.util.TextFormatter.applyColor;
+
 public class Config {
+
+  private Config() {}
 
   private static final Set<Material> filterMaterials = new HashSet<>();
   private static FileConfiguration config;
@@ -233,16 +236,15 @@ public class Config {
 
   /**
    * Get captcha GUI inventory filled with random items.
-   *
    * @param player Player to get captcha GUI inventory for.
    * @return Captcha GUI inventory filled with random items.
    */
   public static Inventory getGUI(Player player, int slot) {
     ItemStack[] contents = Items.getCaptchaItems(getGUISize());
-    String guiName = applyColor(
-        getGUIName().replaceAll(
-            "%item%",
-            Objects.requireNonNull(contents[slot].getItemMeta()).getDisplayName()));
+    String guiName = applyColor(getGUIName().replace(
+        "%item%",
+        Objects.requireNonNull(contents[slot].getItemMeta()).getDisplayName()
+    ));
     Inventory result = Bukkit.createInventory(player, getGUISize(), guiName);
     result.setContents(contents);
     return result;

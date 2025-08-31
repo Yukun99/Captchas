@@ -14,18 +14,14 @@ public class AuthMe implements Listener {
   }
 
   @EventHandler
-  private void PlayerAuthMeLoginEvent(LoginEvent e) {
-    if (IntegrationManager.notInQueue(e.getPlayer())) {
-      return;
-    }
+  private void playerAuthMeLoginEvent(LoginEvent e) {
+    if (IntegrationManager.notInQueue(e.getPlayer())) return;
     IntegrationManager.startCaptcha(e.getPlayer());
   }
 
   @EventHandler
-  private void PlayerAuthmeLeaveEvent(PlayerQuitEvent e) {
-    if (IntegrationManager.notInQueue(e.getPlayer())) {
-      return;
-    }
+  private void playerAuthMeLeaveEvent(PlayerQuitEvent e) {
+    if (IntegrationManager.notInQueue(e.getPlayer())) return;
     IntegrationManager.dequeueCaptcha(e.getPlayer());
   }
 }

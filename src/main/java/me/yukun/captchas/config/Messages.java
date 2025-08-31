@@ -1,13 +1,23 @@
 package me.yukun.captchas.config;
 
-import static me.yukun.captchas.util.TextFormatter.applyColor;
-
+import me.yukun.captchas.Captchas;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Logger;
+
+import static me.yukun.captchas.util.TextFormatter.applyColor;
 
 public class Messages {
+
+  private Messages() {}
+
+  private static final Logger logger = JavaPlugin.getPlugin(Captchas.class).getLogger();
+
+  private static final String PH_FILE = "%file%";
 
   // Plugin info ping messages.
   private static final String VERSION = "Captchas v%version% loaded.";
@@ -60,29 +70,26 @@ public class Messages {
 
   /**
    * Sends plugin version info to specified player.
-   *
    * @param player Player to send plugin version info to.
    * @param plugin Plugin to get version info for.
    */
   public static void sendPluginVersion(Player player, Plugin plugin) {
-    String message = prefix + VERSION.replaceAll("%version%", plugin.getDescription().getVersion());
+    String message = prefix + VERSION.replace("%version%", plugin.getDescription().getVersion());
     player.sendMessage(applyColor(message));
   }
 
   /**
    * Sends plugin integration enabled status to specified player.
-   *
-   * @param player          Player to send plugin integration enabled status to.
+   * @param player Player to send plugin integration enabled status to.
    * @param integrationName Name of plugin that has integration enabled.
    */
   public static void sendIntegrationEnabled(Player player, String integrationName) {
-    String message = prefix + INTEGRATION.replaceAll("%integration%", integrationName);
+    String message = prefix + INTEGRATION.replace("%integration%", integrationName);
     player.sendMessage(applyColor(message));
   }
 
   /**
    * Sends config error message to specified player.
-   *
    * @param player Player to send config error message to.
    */
   public static void sendConfigError(Player player) {
@@ -93,117 +100,108 @@ public class Messages {
    * Logging message during setup sent if config folder exists.
    */
   protected static void printFolderExists() {
-    System.out.println(applyColor(prefix + FOLDER + EXISTS));
+    logger.info(applyColor(prefix + FOLDER + EXISTS));
   }
 
   /**
    * Logging message during setup sent if config folder does not exist.
    */
   protected static void printFolderNotExists() {
-    System.out.println(applyColor(prefix + FOLDER + NOT_EXISTS));
+    logger.info(applyColor(prefix + FOLDER + NOT_EXISTS));
   }
 
   /**
    * Logging message during setup sent if specified file exists in config folder.
-   *
    * @param filename Filename of specified file.
    */
   protected static void printFileExists(String filename) {
-    System.out.println(applyColor(prefix + filename + EXISTS));
+    logger.info(applyColor(prefix + filename + EXISTS));
   }
 
   /**
    * Logging message during setup sent if specified file does not exist in config folder.
-   *
    * @param filename Filename of specified file.
    */
   protected static void printFileNotExists(String filename) {
-    System.out.println(applyColor(prefix + filename + NOT_EXISTS));
+    logger.info(applyColor(prefix + filename + NOT_EXISTS));
   }
 
   /**
    * Logging message during setup sent if specified file could not be copied to config folder.
-   *
    * @param filename Filename of specified file.
    */
   protected static void printFileCopyError(String filename) {
-    String message = prefix + COPY_ERROR.replaceAll("%file%", filename);
-    System.out.println(applyColor(message));
+    String message = prefix + COPY_ERROR.replace(PH_FILE, filename);
+    logger.warning(applyColor(message));
   }
 
   /**
    * Logging message during setup sent if config files contain errors and could not load properly.
    */
   public static void printConfigError(Exception exception) {
-    System.out.println(applyColor(prefix + CONFIG_ERROR));
-    System.out.println(applyColor(prefix + exception.getMessage()));
+    logger.warning(applyColor(prefix + CONFIG_ERROR));
+    logger.warning(applyColor(prefix + exception.getMessage()));
   }
 
   /**
    * Logging message during setup sent if specified plugin integration is enabled.
-   *
    * @param integrationName Name of plugin to integrate with.
    */
   public static void printIntegrationEnabled(String integrationName) {
-    String message = prefix + INTEGRATION.replaceAll("%integration%", integrationName);
-    System.out.println(applyColor(message));
+    String message = prefix + INTEGRATION.replace("%integration%", integrationName);
+    logger.info(applyColor(message));
   }
 
   /**
    * Logging message during shutdown sent if specified file could not be saved.
-   *
    * @param filename Filename of specified file.
    */
   public static void printSaveError(String filename) {
-    String message = prefix + SAVE_ERROR.replaceAll("%file%", filename);
-    System.out.println(applyColor(message));
+    String message = prefix + SAVE_ERROR.replace(PH_FILE, filename);
+    logger.warning(applyColor(message));
   }
 
   /**
    * Logging message during setup sent if specified file is validated successfully.
-   *
    * @param configType Configuration file type that was validated successfully.
    */
   public static void printValidationSuccess(ConfigTypeEnum configType) {
-    String message = prefix + VALIDATION_SUCCESS.replaceAll("%file%", configType.toString());
-    System.out.println(applyColor(message));
+    String message = prefix + VALIDATION_SUCCESS.replace(PH_FILE, configType.toString());
+    logger.info(applyColor(message));
   }
 
   /**
    * Logging message during reloading sent if specified file is reloaded successfully.
-   *
    * @param configType Configuration file type that was reloaded successfully.
    */
   public static void printReloaded(ConfigTypeEnum configType) {
-    String message = prefix + RELOAD.replaceAll("%file%", configType.toString());
-    System.out.println(applyColor(message));
+    String message = prefix + RELOAD.replace(PH_FILE, configType.toString());
+    logger.info(applyColor(message));
   }
 
   /**
    * Send captcha opening message to player.
-   *
    * @param player Player to send captcha opening message to.
-   * @param time   Time in seconds player has to complete captcha in.
+   * @param time Time in seconds player has to complete captcha in.
    */
   public static void sendOpen(Player player, int time) {
-    player.sendMessage(applyColor(open.replaceAll("%time%", String.valueOf(time))));
+    player.sendMessage(applyColor(open.replace("%time%", String.valueOf(time))));
   }
 
   /**
    * Send captcha opening warning message to player.
-   *
    * @param player Player to send captcha opening warning message to.
-   * @param warn   Time in seconds before captcha opens.
-   * @param time   Time in seconds that player has to complete captcha after it opens.
+   * @param warn Time in seconds before captcha opens.
+   * @param time Time in seconds that player has to complete captcha after it opens.
    */
   public static void sendWarning(Player player, int warn, int time) {
-    player.sendMessage(applyColor(warning.replaceAll("%warn%", String.valueOf(warn))
-        .replaceAll("%time%", String.valueOf(time))));
+    player.sendMessage(applyColor(
+        warning.replace("%warn%", String.valueOf(warn)).replace("%time%", String.valueOf(time))
+    ));
   }
 
   /**
    * Send grace period message to player.
-   *
    * @param player Player to send grace period message to.
    */
   public static void sendGrace(Player player) {
@@ -212,29 +210,27 @@ public class Messages {
 
   /**
    * Send right answer message to player.
-   *
-   * @param player   Player to send right answer message to.
+   * @param player Player to send right answer message to.
    * @param cooldown Cooldown time before next captcha can open.
-   * @param strikes  Number of strikes that the player has.
+   * @param strikes Number of strikes that the player has.
    */
   public static void sendRight(Player player, int cooldown, int strikes) {
-    player.sendMessage(applyColor(right.replaceAll("%cooldown%", String.valueOf(cooldown))
-        .replaceAll("%strikes%", String.valueOf(strikes))));
+    player.sendMessage(applyColor(
+        right.replace("%cooldown%", String.valueOf(cooldown)).replace("%strikes%", String.valueOf(strikes))
+    ));
   }
 
   /**
    * Send wrong answer message to player.
-   *
-   * @param player  Player to send wrong answer message to.
+   * @param player Player to send wrong answer message to.
    * @param strikes Number of strikes that the player has.
    */
   public static void sendWrong(Player player, int strikes) {
-    player.sendMessage(applyColor(wrong.replaceAll("%strikes%", String.valueOf(strikes))));
+    player.sendMessage(applyColor(wrong.replace("%strikes%", String.valueOf(strikes))));
   }
 
   /**
    * Send punish message to player.
-   *
    * @param player Player to send punish message to.
    */
   public static void sendPunish(Player player) {
@@ -243,7 +239,6 @@ public class Messages {
 
   /**
    * Send commands help message to help command sender.
-   *
    * @param commandSender Command sender to send commands help message to.
    */
   public static void sendHelp(CommandSender commandSender) {
@@ -263,7 +258,6 @@ public class Messages {
 
   /**
    * Send config reloaded message to command sender.
-   *
    * @param commandSender CommandSender to send reloaded message to.
    */
   public static void sendReloadSuccess(CommandSender commandSender) {
@@ -272,7 +266,6 @@ public class Messages {
 
   /**
    * Send captcha opening success message to command sender.
-   *
    * @param sender CommandSender to send captcha opening success message to.
    */
   public static void sendOpenSuccess(CommandSender sender) {
@@ -281,7 +274,6 @@ public class Messages {
 
   /**
    * Send captcha closing success message to command sender.
-   *
    * @param sender CommandSender to send captcha closing success message to.
    */
   public static void sendCloseSuccess(CommandSender sender) {
@@ -290,7 +282,6 @@ public class Messages {
 
   /**
    * Send no permission message to command sender.
-   *
    * @param sender CommandSender to send no permission message to.
    */
   public static void sendNoPermission(CommandSender sender) {

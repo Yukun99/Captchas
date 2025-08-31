@@ -16,18 +16,14 @@ public class NLogin implements Listener {
   }
 
   @EventHandler
-  private void PlayerNLoginLoginEvent(LoginEvent e) {
-    if (IntegrationManager.notInQueue(e.getPlayer())) {
-      return;
-    }
+  private void playerNLoginLoginEvent(LoginEvent e) {
+    if (IntegrationManager.notInQueue(e.getPlayer())) return;
     IntegrationManager.startCaptcha(e.getPlayer());
   }
 
   @EventHandler
-  private void PlayerNLoginLeaveEvent(PlayerQuitEvent e) {
-    if (IntegrationManager.notInQueue(e.getPlayer())) {
-      return;
-    }
+  private void playerNLoginLeaveEvent(PlayerQuitEvent e) {
+    if (IntegrationManager.notInQueue(e.getPlayer())) return;
     IntegrationManager.dequeueCaptcha(e.getPlayer());
   }
 }

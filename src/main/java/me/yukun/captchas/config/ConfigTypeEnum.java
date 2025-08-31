@@ -12,6 +12,7 @@ public enum ConfigTypeEnum {
     this.filename = filename;
   }
 
+  @Override
   public String toString() {
     return this.filename;
   }

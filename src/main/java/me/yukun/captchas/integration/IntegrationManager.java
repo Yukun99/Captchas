@@ -1,7 +1,5 @@
 package me.yukun.captchas.integration;
 
-import java.util.HashMap;
-import java.util.Map;
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.config.Messages;
 import me.yukun.captchas.gui.Captcha;
@@ -9,7 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class IntegrationManager {
+
+  private IntegrationManager() {}
 
   private static final Map<Player, Captcha> playerCaptchaMap = new HashMap<>();
 
@@ -31,6 +34,10 @@ public class IntegrationManager {
   protected static void dequeueCaptcha(Player player) {
     playerCaptchaMap.get(player).clickWrong(true);
     playerCaptchaMap.remove(player);
+  }
+
+  public static boolean isInQueue(Player player) {
+    return playerCaptchaMap.containsKey(player);
   }
 
   protected static boolean notInQueue(Player player) {

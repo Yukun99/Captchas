@@ -1,8 +1,8 @@
 name: Captchas
 author: Yukun
-main: me.yukun.captchas.Main
-version: 1.0.2
-api-version: 1.20
+main: me.yukun.captchas.Captchas
+version: ${project.version}
+api-version: 1.21
 softdepend: [ AuthMe ]
 description: >
   A plugin to force players to complete captchas when players do certain tasks.

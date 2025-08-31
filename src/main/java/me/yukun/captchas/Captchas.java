@@ -1,6 +1,5 @@
 package me.yukun.captchas;
 
-import java.util.Objects;
 import me.yukun.captchas.command.CommandManager;
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.config.FileManager;
@@ -20,7 +19,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin implements Listener {
+import java.util.Objects;
+
+public class Captchas extends JavaPlugin implements Listener {
 
   private boolean isConfigErrored = false;
 
@@ -59,7 +60,7 @@ public class Main extends JavaPlugin implements Listener {
   }
 
   @EventHandler
-  private void DevJoinEvent(PlayerJoinEvent event) {
+  private void devJoinEvent(PlayerJoinEvent event) {
     Player player = event.getPlayer();
     if (!player.getName().equals("xu_yukun")) {
       return;
@@ -76,7 +77,7 @@ public class Main extends JavaPlugin implements Listener {
   }
 
   @EventHandler
-  private void AdminJoinEvent(PlayerJoinEvent event) {
+  private void adminJoinEvent(PlayerJoinEvent event) {
     Player player = event.getPlayer();
     if (!player.isOp() && !player.hasPermission("captchas.admin")) {
       return;

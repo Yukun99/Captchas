@@ -1,11 +1,5 @@
 package me.yukun.captchas.gui;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
 import me.yukun.captchas.config.Config;
 import me.yukun.captchas.config.Messages;
 import me.yukun.captchas.config.Players;
@@ -15,28 +9,33 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
+import java.util.*;
+
 public class Captcha {
 
   private static final Random RANDOM = new Random();
-  private static final Plugin PLUGIN = Objects.requireNonNull(
-      Bukkit.getPluginManager().getPlugin("Captchas"));
+  private static final Plugin PLUGIN = Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("Captchas"));
+  private static final String PH_PLAYER = "%player%";
+
   private static final Map<Player, Captcha> targetCaptchaMap = new HashMap<>();
+
   // Players on captcha cooldown
   private static final Set<Player> cooldowns = new HashSet<>();
+
   // General variables
   private final Player target;
   private final int slot;
   boolean isFirstJoin;
   private Inventory inventory;
   private int durationTimer;
+
   // Remaining grace time and chances
   private boolean isGraceTime = false;
   private int graceChances = 0;
 
   /**
    * Starts a captcha for specified player. Will not start a captcha if player is on cooldown.
-   *
-   * @param player      Player to start captcha for.
+   * @param player Player to start captcha for.
    * @param isFirstJoin Whether player has joined the server for the first time.
    */
   public Captcha(Player player, boolean isFirstJoin) {
@@ -51,8 +50,25 @@ public class Captcha {
   }
 
   /**
+   * Checks if player already has a captcha queued and cannot trigger a captcha.
+   * @param player Player to be checked.
+   * @return Whether player cannot trigger a captcha.
+   */
+  public static boolean cannotTriggerCaptcha(Player player) {
+    return IntegrationManager.isInQueue(player);
+  }
+
+  /**
+   * Checks if specified player is currently in captcha.
+   * @param player Player to be checked.
+   * @return Whether specified player is currently in captcha.
+   */
+  public static boolean isInCaptcha(Player player) {
+    return targetCaptchaMap.containsKey(player);
+  }
+
+  /**
    * Check if specified player is on Captcha cooldown.
-   *
    * @param player Player to be checked for cooldown status.
    * @return Whether specified player is on Captcha cooldown.
    */
@@ -78,7 +94,7 @@ public class Captcha {
       return;
     }
     for (String command : Config.getOnTriggerCommands()) {
-      String playerCommand = command.replaceAll("%player%", target.getName());
+      String playerCommand = command.replace(PH_PLAYER, target.getName());
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), playerCommand);
     }
   }
@@ -165,7 +181,6 @@ public class Captcha {
 
   /**
    * Opens captcha GUI for specified player.
-   *
    * @param player Player to open captch GUI for.
    */
   public static void openPlayerCaptcha(Player player) {
@@ -177,7 +192,6 @@ public class Captcha {
 
   /**
    * Stops captcha GUI tracking and closes captcha inventory for specified player.
-   *
    * @param player Player to stop captcha GUI tracking and close captcha inventory for.
    */
   public static void closePlayerCaptcha(Player player) {
@@ -189,7 +203,6 @@ public class Captcha {
   /**
    * Called when player has clicked on wrong item in captcha GUI or has no more time.<p> Sends
    * requisite messages to player too.
-   *
    * @param ignoreGrace Whether wrong answer should ignore grace.
    */
   public void clickWrong(boolean ignoreGrace) {
@@ -217,12 +230,12 @@ public class Captcha {
     }
     Messages.sendPunish(target);
     for (String command : Config.getWrongPunishCommands()) {
-      String playerCommand = command.replaceAll("%player%", target.getName());
+      String playerCommand = command.replace(PH_PLAYER, target.getName());
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), playerCommand);
     }
     if (Config.doFirstJoinExtraPunish()) {
       for (String command : Config.getFirstJoinExtraPunishCommands()) {
-        String playerCommand = command.replaceAll("%player%", target.getName());
+        String playerCommand = command.replace(PH_PLAYER, target.getName());
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), playerCommand);
       }
     }
@@ -251,21 +264,22 @@ public class Captcha {
   private void reward() {
     if (Config.doCooldown()) {
       cooldowns.add(target);
-      Bukkit.getScheduler().scheduleSyncDelayedTask(PLUGIN, () -> cooldowns.remove(target),
-          Config.getCooldownTime() * 20L);
+      Bukkit.getScheduler().scheduleSyncDelayedTask(
+          PLUGIN, () -> cooldowns.remove(target),
+          Config.getCooldownTime() * 20L
+      );
     }
     if (!Config.doCorrectReward()) {
       return;
     }
     for (String command : Config.getCorrectRewardCommands()) {
-      String playerCommand = command.replaceAll("%player%", target.getName());
+      String playerCommand = command.replace(PH_PLAYER, target.getName());
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), playerCommand);
     }
   }
 
   /**
    * Tries to use grace to not get captcha wrong.
-   *
    * @return Whether grace has been successfully used and player should be pardoned.
    */
   private boolean useGrace() {
